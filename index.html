@@ -27,6 +27,8 @@
         auth2.signOut().then(function () {
           console.log('User signed out.');
         });
+        var img = document.getElementById("img_home");
+        img.removeChild(img.childNodes[0]);  
         // var img = document.getElementById('img_home');
         // img.src = "johndoe.gif";
       }
