@@ -12,7 +12,9 @@
     <title>Gitar-player Hello!!</title>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
+      var signed;
       function onSignIn(googleUser) {
+        signed ? console.log("User is currently signed in.") : console.log("User is currently NOT signed in.") 
         var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
         console.log('Name: ' + profile.getName());
@@ -21,14 +23,17 @@
         var img = new Image();
         img.src = profile.getImageUrl();
         document.getElementById('img_home').appendChild(img);
+        signed = true;
       }
       function signOut() {
+        signed ? console.log("User is currently signed in.") : console.log("User is currently NOT signed in.") 
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
           console.log('User signed out.');
         });
         var img = document.getElementById("img_home");
         img.removeChild(img.childNodes[0]);  
+        signed = false;
       }
     </script>  
   </head>
