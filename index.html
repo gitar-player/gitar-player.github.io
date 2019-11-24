@@ -12,9 +12,13 @@
     <title>Gitar-player Hello!!</title>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
-      function onSignIn(googleUser) {
+      function isSignedIn() {
         var img = document.getElementById("img_home");
-        if (img.childNodes[0]) return; // Don't sign in again!  
+        if (img.childNodes[0]) return true; 
+        return false
+      }
+      function onSignIn(googleUser) {
+        if isSignedIn() return; // Don't sign in again!  
         var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
         console.log('Name: ' + profile.getName());
