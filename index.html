@@ -26,6 +26,7 @@
         img.src = profile.getImageUrl();
         document.getElementById('img_home').appendChild(img);
         signed = true;
+        listFiles();
       }
       function signOut() {
         signed ? console.log("User is currently signed in.") : console.log("User is currently NOT signed in.") 
@@ -37,6 +38,40 @@
         img.removeChild(img.childNodes[0]);  
         signed = false;
       }
+      
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node. Used to display the results of the API call.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById('contents');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
+      /**
+       * Print files.
+       */
+      function listFiles() {
+        gapi.client.drive.files.list({
+          'pageSize': 10,
+          'fields': "nextPageToken, files(id, name)"
+        }).then(function(response) {
+          appendPre('Files:');
+          var files = response.result.files;
+          if (files && files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+              appendPre(file.name + ' (' + file.id + ')');
+            }
+          } else {
+            appendPre('No files found.');
+          }
+        });
+      }
+
     </script>  
   </head>
   <body>
