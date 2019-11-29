@@ -27,6 +27,9 @@
       var ASSET_FOLDER = "'1SQtP2uOUoKrCglZwiNxCsslcofSf_ayZ'";
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
+
+      var myfiles = [];
+ 
       /**
        *  On load, called to load the auth2 library and API client library.
        */
@@ -133,16 +136,30 @@
             txt = "<table border='1'>"
             txt += "<tr><th>File Name</th><th> File Id</th></tr>"
             var index = 0;
+            myfiles = [];
             while (index < files.length) { 
               txt += "<tr><td>" + files[index].name + "</td>" 
                         + "<td>" + JSON.stringify(files[index], null, 2) + "</td></tr>"; 
+              myfiles.push(files[index].id);
               index++; 
             }
             txt += "</table>"
+            console.log(myfiles);
           }
           document.getElementById("contents").innerHTML = txt;
         });
       }
+
+      function getFileMetaData(fileId) {
+        gapi.client.drive.files.get({
+          'fileId': fileId
+        }).then(function(response) {
+          console.log('Title: ' + response.title);
+          console.log('Description: ' + response.description);
+          console.log('MIME type: ' + response.mimeType);
+        });
+      }
+
     </script>
 
     <script async defer src="https://apis.google.com/js/api.js"
