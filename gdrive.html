@@ -144,7 +144,11 @@
               index++; 
             }
             txt += "</table>"
-            console.log(myfiles);
+            // console.log(myfiles);
+            var fLen = myfiles.length;
+            for (i = 0; i < fLen; i++) {
+              getFileMetaData(myfiles[i]);
+            }
           }
           document.getElementById("contents").innerHTML = txt;
         });
