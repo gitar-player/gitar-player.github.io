@@ -30,7 +30,8 @@
     <button id="signout-button" style="display: none;">Sign Out</button>
 
     <div id="content"></div>
-
+    <div id="contents" > </div>
+    
     <script type="text/javascript">
       // Enter an API key from the Google API Console:
       //   https://console.developers.google.com/apis/credentials
@@ -50,10 +51,15 @@
       var scopes = 'profile';
       var authorizeButton = document.getElementById('authorize-button');
       var signoutButton = document.getElementById('signout-button');
+      
+      // My asset folder
+      var ASSET_FOLDER = "'1SQtP2uOUoKrCglZwiNxCsslcofSf_ayZ'";
+        
       function handleClientLoad() {
         // Load the API client and auth2 library
         gapi.load('client:auth2', initClient);
       }
+      
       function initClient() {
         gapi.client.init({
             apiKey: apiKey,
@@ -69,22 +75,27 @@
           signoutButton.onclick = handleSignoutClick;
         });
       }
+      
       function updateSigninStatus(isSignedIn) {
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
           makeApiCall();
+          listFolder(ASSET_FOLDER);
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
         }
       }
+      
       function handleAuthClick(event) {
         gapi.auth2.getAuthInstance().signIn();
       }
+      
       function handleSignoutClick(event) {
         gapi.auth2.getAuthInstance().signOut();
       }
+      
       // Load the API and make an API call.  Display the results on the screen.
       function makeApiCall() {
         gapi.client.people.people.get({
@@ -97,6 +108,34 @@
           document.getElementById('content').appendChild(p);
         });
       }
+      
+      // Get files from the given parent folder
+      function listFolder(folderId) {
+        gapi.client.drive.files.list({
+          'pageSize': 10,
+          // 'q' : "mimeType='image/jpeg'",  // return jpeg files
+          // 'q' : "mimeType='application/vnd.google-apps.folder'",  // return only folders
+          'q' : folderId + " in parents", // AllwynPhotos
+          // 'fields': "nextPageToken, files(id, name)"
+          // 'fields' : "nextPageToken, files(id, name, parents, mimeType, modifiedTime, imageMediaMetadata)"
+          'fields': "*"
+        }).then(function(response) {
+          var files = response.result.files;
+          var txt = 'No files found';
+          if (files && files.length > 0) {
+            txt = "<table border='1'>"
+            txt += "<tr><th>File Name</th><th> File Id</th></tr>"
+            var index = 0;
+            while (index < files.length) { 
+              txt += "<tr><td>" + files[index].name + "</td>" 
+                        + "<td>" + JSON.stringify(files[index], null, 2) + "</td></tr>"; 
+              index++; 
+            }
+            txt += "</table>"
+          }
+          document.getElementById("contents").innerHTML = txt;
+        });
+
     </script>
     <script async defer src="https://apis.google.com/js/api.js" 
       onload="this.onload=function(){};handleClientLoad()" 
