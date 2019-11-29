@@ -158,9 +158,11 @@
         gapi.client.drive.files.get({
           'fileId': fileId
         }).then(function(response) {
-          console.log('Title: ' + response.title);
-          console.log('Description: ' + response.description);
-          console.log('MIME type: ' + response.mimeType);
+          var file = response.result;
+          console.log('Name: ' + file.name);
+          console.log('Kind: ' + file.kind);
+          console.log('Description: ' + file.description);
+          console.log('MIME type: ' + file.mimeType);
         });
       }
 
