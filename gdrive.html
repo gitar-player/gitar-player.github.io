@@ -156,7 +156,8 @@
 
       function getFileMetaData(fileId) {
         gapi.client.drive.files.get({
-          'fileId': fileId
+          'fileId': fileId,
+          'fields': "*"
         }).then(function(response) {
           var file = response.result;
           console.log(file);
